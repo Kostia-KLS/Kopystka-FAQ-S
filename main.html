@@ -1,0 +1,228 @@
+<!doctype html>
+<html lang="uk">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Kopystka FAQ`S</title>
+    <!-- Telegram Web App SDK -->
+    <script src="https://telegram.org"></script>
+    <style>
+      :root {
+        --bg-color: #000000; /* Чистий чорний фон */
+        --text-color: #ffffff; /* Білий текст */
+        --accent-color: #3b82f6; /* Колір акцентів та стрілочок (можна змінити) */
+        --card-bg: #121212; /* Трохи світліший чорний для блоків */
+        --border-color: #262626; /* Колір меж */
+        --text-muted: #a3a3a3; /* Сірий колір для другорядного тексту */
+      }
+
+      body {
+        /* Сучасний системний шрифт без засічок */
+        font-family:
+          -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica,
+          Arial, sans-serif;
+        background-color: var(--bg-color);
+        color: var(--text-color);
+        margin: 0;
+        padding: 16px;
+        padding-bottom: 90px; /* Відступ внизу для кнопки */
+        -webkit-font-smoothing: antialiased;
+      }
+
+      /* Шапка сайту */
+      .header {
+        text-align: center;
+        margin-bottom: 24px;
+      }
+      .header h1 {
+        font-size: 1.5rem;
+        font-weight: 700;
+        margin: 0 0 6px 0;
+      }
+      .header p {
+        font-size: 0.9rem;
+        color: var(--text-muted);
+        margin: 0;
+      }
+
+      /* Назва категорії */
+      .category-title {
+        font-size: 1rem;
+        font-weight: 700;
+        margin: 24px 0 12px 0;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        color: var(--accent-color);
+      }
+
+      /* Контейнер для питання та відповіді */
+      .faq-item {
+        background-color: var(--card-bg);
+        border: 1px solid var(--border-color);
+        border-radius: 12px;
+        margin-bottom: 12px;
+        overflow: hidden;
+        transition: border-color 0.2s ease;
+      }
+
+      /* Блок з питанням */
+      .faq-question {
+        padding: 16px;
+        font-size: 0.95rem;
+        font-weight: 600;
+        cursor: pointer;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        user-select: none;
+      }
+
+      /* Стрілочка індикатор */
+      .faq-question::after {
+        content: "";
+        width: 8px;
+        height: 8px;
+        border-right: 2px solid var(--text-muted);
+        border-bottom: 2px solid var(--text-muted);
+        transform: rotate(45deg);
+        transition:
+          transform 0.3s ease,
+          border-color 0.3s ease;
+        margin-right: 4px;
+      }
+
+      .faq-item.active .faq-question::after {
+        transform: rotate(-135deg);
+        border-color: var(--accent-color);
+      }
+
+      /* Блок з відповіддю (схований за замовчуванням) */
+      .faq-answer {
+        max-height: 0;
+        overflow: hidden;
+        transition:
+          max-height 0.3s ease-out,
+          padding 0.3s ease;
+        padding: 0 16px;
+        font-size: 0.9rem;
+        line-height: 1.6;
+        color: var(--text-muted);
+      }
+
+      .faq-item.active .faq-answer {
+        padding: 0 16px 16px 16px;
+      }
+
+      /* Нижня фіксована кнопка */
+      .cta-container {
+        position: fixed;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        padding: 16px;
+        background: linear-gradient(to top, var(--bg-color) 80%, transparent);
+      }
+
+      .cta-button {
+        display: block;
+        width: 100%;
+        background-color: var(--text-color);
+        color: var(--bg-color);
+        text-align: center;
+        padding: 14px;
+        border-radius: 12px;
+        font-weight: 700;
+        font-size: 0.95rem;
+        border: none;
+        cursor: pointer;
+        box-sizing: border-box;
+        transition: opacity 0.2s ease;
+      }
+
+      .cta-button:active {
+        opacity: 0.8;
+      }
+    </style>
+  </head>
+  <body>
+    <!-- Назва та опис сторінки -->
+    <div class="header">
+      <h1>FAQ`S</h1>
+      <p>Answers to frequently asked questions</p>
+    </div>
+
+    <!-- КАТЕГОРІЯ 1 -->
+    <div class="category-title">TACZ Bedrock Mod</div>
+
+    <div class="faq-item">
+      <div class="faq-question">Am I the developer of this mod?</div>
+      <div class="faq-answer">
+        No! I am not the developer of this mod. Its real developer is Akang Krep.
+      </div>
+    </div>
+
+    <div class="faq-item">
+      <div class="faq-question">Why are translation updates for this mod not released so often?</div>
+      <div class="faq-answer">It's hard to translate because of the obfuscated code, and I'm translating alone.</div>
+    </div>
+
+    <!-- КАТЕГОРІЯ 2 -->
+    <div class="category-title">FAQ`S Info</div>
+
+    <div class="faq-item">
+      <div class="faq-question">FAQ`S Updates</div>
+      <div class="faq-answer">There aren't many answers here yet, but I will be releasing updates to this page.</div>
+    </div>
+
+    <!-- ФІКСОВАНА КНОПКА ВНИЗУ -->
+    <div class="cta-container">
+      <button class="cta-button" id="main-action-btn">Credits</button>
+    </div>
+
+    <!-- Скрипт для роботи акордеону та Telegram SDK -->
+    <script>
+      // Безпечна ініціалізація Telegram (не ламає код у звичайному браузері чи редакторі)
+      if (window.Telegram && window.Telegram.WebApp) {
+        const tg = window.Telegram.WebApp;
+        tg.ready();
+        tg.expand();
+      }
+
+      // Логіка відкриття/закриття питань
+      document.querySelectorAll(".faq-question").forEach((question) => {
+        question.addEventListener("click", () => {
+          const item = question.parentNode;
+          const answer = item.querySelector(".faq-answer");
+
+          if (item.classList.contains("active")) {
+            answer.style.maxHeight = null;
+            item.classList.remove("active");
+          } else {
+            // Закриваємо інші відкриті питання
+            document.querySelectorAll(".faq-item").forEach((el) => {
+              el.classList.remove("active");
+              el.querySelector(".faq-answer").style.maxHeight = null;
+            });
+
+            item.classList.add("active");
+            // ЯкщоscrollHeight повернув 0, даємо фіксовану висоту для тесту
+            const height = answer.scrollHeight;
+            answer.style.maxHeight = (height > 0 ? height : 150) + "px";
+          }
+        });
+      });
+
+      // Безпечна кнопка закриття
+      const closeBtn = document.getElementById("main-action-btn");
+      if (closeBtn) {
+        closeBtn.addEventListener("click", () => {
+          if (window.Telegram && window.Telegram.WebApp) {
+            window.Telegram.WebApp.close();
+          } else {
+            alert("Developer: 🌐Kopystka Localization Studio \n2026");
+          }
+        });
+      }
+    </script>
+  </body>
+</html>
